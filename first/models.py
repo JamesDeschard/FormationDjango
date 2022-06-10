@@ -9,15 +9,15 @@ class Person(models.Model):
         return self.name
 
 class Movie(models.Model):
-    imdb_title_id = models.CharField(max_length=128, blank=False, null=False)
-    original_title = models.CharField(max_length=128, blank=False, null=False)
+    imdb_title_id = models.CharField(max_length=500, blank=False, null=False)
+    original_title = models.CharField(max_length=500, blank=False, null=False)
     year = models.IntegerField()
-    genre = models.CharField(max_length=128, blank=False, null=False)
+    genre = models.CharField(max_length=500, blank=False, null=False)
     duration = models.IntegerField()
-    director = models.CharField(max_length=128, blank=False, null=False)
-    writer = models.CharField(max_length=128, blank=False, null=False)
-    production_company = models.CharField(max_length=128, blank=False, null=False)
-    actors = models.CharField(max_length=128, blank=False, null=False)
+    director = models.CharField(max_length=500, blank=False, null=False)
+    writer = models.CharField(max_length=500, blank=False, null=False)
+    production_company = models.CharField(max_length=500, blank=False, null=False)
+    actors = models.CharField(max_length=500, blank=False, null=False)
     description = models.TextField()
     avg_vote = models.FloatField()
     votes = models.IntegerField()

@@ -1,1 +1,1 @@
-web: dayone.wsgi
+web: gunicorn dayone.wsgi
