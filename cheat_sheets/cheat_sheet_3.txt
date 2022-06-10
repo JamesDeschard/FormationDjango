@@ -1,0 +1,273 @@
+### Gestion des fichiers statique et media ###
+
+    ## Fichiers statiques ##
+
+        Dans le ficher settings.py
+            STATIC_URL = 'static/'
+            STATICFILES_DIRS = [
+                'nom du fichier'
+            ]
+
+        STATICFILES_DIRS --> la ou chercher les fichiers statiques
+        STATIC_ROOT --> Tous les fichiers statiques du projet sont places dans ce fichier au moment du depoloiement
+        (python manage.py collectstatic). Sur le serveur de production tous les fichiers sont centralises. 
+        
+        Dans les template:
+            - {% load static %}
+            - Referencer les fichiers statiques comme ceci: {% static 'example/example.jpg' %}
+        
+        Vous pouvez servir les fichiers statiques en production avec whitenoise (module Python)
+    
+    ## Fichiers media ##
+
+        Dans le ficher settings.py
+            MEDIA_URL = 'media/'
+            MEDIA_ROOT = os.path.join(BASE_DIR, 'media') [== root/media/]
+        
+        pip install pillow (lib Python de gestion d'images)
+
+        Pour utiliser l'image ou le fichier d'un objet dans une balise <img> ou <a>:
+            - obj.field.url
+        
+        particularite dans la manipulation:
+
+            Exemple d'une vue gerant l'upload d'un fichier...
+
+                if request.method == 'POST':
+                    form = UploadFileForm(request.POST, request.FILES) !!!
+                    if form.is_valid():
+                        form.save()
+        
+        # En phase de developpement:
+
+            from django.conf.urls.static import static
+            from django.conf import settings
+
+            if settings.DEBUG:
+                urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+        
+
+        # En production:
+
+            Heroku va supprimer les assets media sur chaque Dyno
+
+            Services tiers --> AWS S3 (ma solution preferee)
+
+            Sinon Configurer MEDIA_ROOT pour que:
+
+            apache --> 
+
+                        Alias /media/ /path/to/media_file/
+
+                        <Directory /path/to/media_file/>
+                        Order deny,allow
+                        Allow from all
+                        </Directory>
+            
+            Nginx -->
+
+                        location /media {
+                            alias /path/to/media/file; # Change to your own media directory here.
+                            access_log off;
+                        }
+
+
+### Le deploiement HEROKU d'une application Django ###
+
+    1. pip install django-heroku
+    2. pip install gunicorn
+    3. pip freeze > requirements.txt
+
+    4. Creer un fichier .gitignore (touch .gitignore)
+    5. Creer un fichier Procfile contenant --> web: gunicorn <nom dir project>.wsgi
+
+    6. Dans settings.py:
+        import django_heroku
+        django_heroku.settings(locals()) --> A la fin du fichier settings.py
+        ALLOWED_HOSTS = ['www.example.com'], pour tester ['*'] (toutes url)
+        DEBUG = False
+
+    7. git init
+    8. git add .
+    9. git commit -m 'first commit'
+
+    10. heroku login
+    11. heroku create <nameapp>
+    12. git push heroku master
+    13. heroku run python manage.py migrate
+    14. heroku run python manage.py createsuperuser
+    15. heroku run python manage.py fill_db (votre commande pour peupler la db avec vos films)
+    16. heroku ps:scale web=1
+    17. heroku open
+
+
+### Un template .gitignore pour Django ###
+
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Mac OS X
+.DS_Store
+._.*
+._*
+
+# Ignore local editor
+.project
+.settings
+.idea
+*.swp
+tags
+nbproject/*
+
+# Windows
+Thumbs.db
+
+npm-debug.log
+
+# Frontend 
+
+node_modules/
+build/
+
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+
+# Backup files # 
+*.bak 
+
+# If you are using PyCharm # 
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# AWS User-specific
+.idea/**/aws.xml
+
+# Generated files
+.idea/**/contentModel.xml
+
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+
+# Gradle
+.idea/**/gradle.xml
+.idea/**/libraries
+
+# File-based project format
+*.iws
+
+# IntelliJ
+out/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Python # 
+*.py[cod] 
+*$py.class 
+
+# Distribution / packaging 
+.Python build/ 
+develop-eggs/ 
+dist/ 
+downloads/ 
+eggs/ 
+.eggs/ 
+lib/ 
+lib64/ 
+parts/ 
+sdist/ 
+var/ 
+wheels/ 
+*.egg-info/ 
+.installed.cfg 
+*.egg 
+*.manifest 
+*.spec 
+
+# Installer logs 
+pip-log.txt 
+pip-delete-this-directory.txt 
+
+# Unit test / coverage reports 
+htmlcov/ 
+.tox/ 
+.coverage 
+.coverage.* 
+.cache 
+.pytest_cache/ 
+nosetests.xml 
+coverage.xml 
+*.cover 
+.hypothesis/ 
+
+# Jupyter Notebook 
+.ipynb_checkpoints 
+
+# pyenv 
+.python-version 
+
+# celery 
+celerybeat-schedule.* 
+
+# SageMath parsed files 
+*.sage.py 
+
+# Environments 
+.env 
+.venv 
+env/ 
+venv/ 
+ENV/ 
+env.bak/ 
+venv.bak/ 
+
+# mkdocs documentation 
+/site 
+
+# mypy 
+.mypy_cache/ 
+
+# Sublime Text # 
+*.tmlanguage.cache 
+*.tmPreferences.cache 
+*.stTheme.cache 
+*.sublime-workspace 
+*.sublime-project 
+
+# sftp configuration file 
+sftp-config.json 
+
+# Package control specific files Package 
+Control.last-run 
+Control.ca-list 
+Control.ca-bundle 
+Control.system-ca-bundle 
+GitHub.sublime-settings 
+
+# Visual Studio Code # 
+.vscode/* 
+!.vscode/settings.json 
+!.vscode/tasks.json 
+!.vscode/launch.json 
+!.vscode/extensions.json 
+.history
+
+
+
+
+
+    

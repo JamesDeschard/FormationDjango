@@ -1,0 +1,12 @@
+{% extends 'films.html' %}
+
+{% block title %} <h1>Create User</h1> {% endblock %}
+
+{% block content%}
+<h2><a href="{% url 'films' %}">Go back to film list</a></h2>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create user">
+</form>
+{% endblock %}

@@ -1,0 +1,250 @@
+### Initialisation ###
+
+    # Creer et acceder au projet
+        mkdir project_name
+        cd project_name
+
+    # Creer un environnement virtuel 
+        python3 -m venv venv
+
+    # Activer l'environnement virtuel
+        source venv/bin/activate
+
+    # Desactiver l'environnement virtuel
+        deactivate
+
+    # Installer la derniere version de Django
+        pip install django
+
+    # Creer un nouveau projet Django
+        django-admin startproject <nom> .
+
+    # Creer une app Django dans un projet
+        python manage.py startapp <nom>
+
+    # Lancer le serveur de developpement
+        python manage.py runserver
+
+    # Acceder au shell Django
+        python manage.py shell
+
+    # Creer le code SQL pour effectuer des migrations
+        python manage.py makemigrations
+
+    # Executer le code SQL pour effectuer des migrations
+        phython manage.py migrate
+    
+    # Creer un super-utilisateur
+        python manage.py createsuperuser
+    
+    ## Exercice ##
+
+        Creer le squelette d'un projet Django contenant une app
+
+### Les modeles ###
+
+    ## Les differents champs de modeles Django ##
+
+    AutoField              → incrémente automatiquement sa valeur
+    BinaryField            → stocke des données binaires brutes en octets (bytes)
+    BooleanField           → un champ True / False
+    CharField              → un champ pour une chaine de caractères assez courte
+    TextField              → pour du texte long
+    CommaSeparatedIntegerField → entiers séparés par un virgule
+    EmailField             → vérifie une valeur d'adresse valide
+    SlugField              → format slug (alphanumérique + tirets)
+    URLField               → format URL
+    DateField              → une date, instance de datetime.date en python
+    DateTimeField          → une date et une heure, instance python de datetime.datetime
+    DecimalField           → un nombre décimal de taille fixe, instance python de Decimal
+    FileField              → un champ de fichier à téléverser (paramètre upload_to est obligatoire)
+    ImageField             → idem que FileField mais vérifie qu'il s'agit d'une image
+    FilePathField          → un path de fichier (paramètre path est obligatoire)
+    FloatField             → une instance de float en python
+    GenericIPAddressField  → une adresse ip valide IPV4 / IPV6
+    IPAddressField         → une adresse ip textuel type 192.168.0.1
+    IntegerField           → valeurs comprises entre -2147483648 à 2147483647 
+    BigIntegerField        → Un entier 64 bits
+    PositiveIntegerField   → valeurs comprises entre 0 et 2147483647 
+    PositiveSmallIntegerField → valeurs comprises entre 0 et 32767
+    SmallIntegerField      → valeurs comprises entre -32768 et 32767 
+    NullBooleanField       → un champ booléen qui accepte le Null
+    TimeField              → format heure instance de datetime.time
+
+    ## Les differents champs de modeles --- avec relations ---
+
+    ForeignKey       → relation plusieurs-à-un
+    ManyToManyField  → relation plusieurs-à-plusieurs 
+    OneToOneField    → relation un-à-un 
+
+    ## Differents paramètres des champs de modeles
+
+    db_column         → nom de la colonne dans la base de données
+    db_index          → créer un index pour la colonne
+    default           → la valeur par défaut du champ
+    editable          → Si False le champ n'est pas éditable dans admin
+    help_text         → texte d'aide affiché dans le formulaire
+    primary_key       → si True devient la clé primaire
+    unique            → si True impossible d'avoir des doublons de valeur
+    verbose_name      → un nom plus explicite
+    validators        → une liste de validateurs à exécuter
+
+    ------------ paramètres spécifiques ---------------------------
+
+    primary_key       → renseigner la clé primaire
+    blank             → autoriser la soumission d'un champ vide
+    null              → autoriser d'enregistrer en base une valeur nulle 
+    unique_for_date   → unique pour une date 
+    unique_for_month  → unique pour un mois 
+    unique_for_year   → unique pour un an 
+    choices           → choix possibles 
+
+
+    ## Methodes du manager 
+
+        # Chercher un objet specifique
+            .get()
+
+        # Chercher de multiples objets
+            .filter()
+        
+        # Chercher de multiples objets en excluant une categorie
+            .exclude()
+
+        # Executer sa propre query SQL
+            .raw()
+
+
+    ## Methodes pour QuerySet
+
+        # Longueur du QuerySet
+            .count()
+
+        # Inverse le QuerySet
+            .reverse()
+        
+        # Transformer les valeurs du QuerySet en dictionnaire
+            .values()
+
+        # Transformer les valeurs du QuerySet en liste
+            .values_list()
+        
+        # Trier le QuerySet
+            .order_by() 
+    
+
+    ## Methodes de recherche ##
+
+        # Toujours precede de __ (ex: name__contains="James")
+        # Les methodes ixxx font abstraction des majuscules/minuscules
+
+            exact --> Recherche correspond exactement
+            iexact
+            contains --> Recherche contiens
+            icontains
+            gt --> > que (greater)
+            gte ==> >=
+            lt --> < a   (less)
+            lte --> <= a
+            startswith --> Commence par
+            istartswith
+            endswith --> Fini par
+            iendswith
+            range --> check if x < query < x
+            isnull --> check if True/False
+            regex --> ex: Entry.objects.get(title__regex=r'^(An?|The) +')
+            iregex
+
+
+    ## Exercices pour la manipulation des modeles ##
+
+        Creer un modele correspondant aux entrees du fichier movies.csv
+        Integrer le modele dans l'interface d'administration
+        Creer une commande Django
+        Utiliser une commande Django pour remplir une table de base de donnees avec la data contenue dans movies.csv
+        Faire une nouvelle commande pour supprimer les objets d'un modele
+
+
+        Les requetes:
+
+        Creer une nouvelle commande executant ces query...
+
+        #   1: Query tous les films
+        #   2: Query le film The Dark Knight
+        #   3: Query les films datants de 2012
+        #   4: Query les films durant plus de 250 minutes
+        #   5: Query les films dont le titre commence par 'a'
+        #   6: Query les films dont le titre fini par 'a'
+        #   7: Query les films dont le nom du directeur contient la lettre 'b'
+        #   8: Query les films dont le nom du directeur contient la lettre 'b' mais pas la lettre 'a'
+        #   9: Query tous les films et les trier par ordre ascendant (par titre)
+        #   10: Query tous les films starring Harrison Ford, Mark Hamill et Carrie Fisher
+        #   11: Faite une fonction qui return le score moyen de toutes les entrees film en base de donnees
+        #   12: Query tous les objets film en ecrivant vous meme la requete
+
+        Si temps suffisant:
+
+        Repeter la manip pour les fichiers books.csv et communes.csv
+
+        Imaginez une fonctionnalitee de barre de recherche sur un site web. 
+        Creer une fonction qui prend pour argument l'input d'une query et qui return un QuerySet qui contiens tous les objets 
+        [movies, books, communes] pouvant etre associes a la recherche.
+
+
+### URLS ###
+
+    ## Routing principal ##
+
+        from django.contrib import admin
+        from django.urls import path, include
+
+        urlpatterns = [
+            path('admin/', admin.site.urls), # les urls du panel admin
+            path('', include('app_name.urls')) # les urls de notre app
+        ]
+    
+    ## Convertisseurs de chemin
+
+        # str
+        # int
+        # slug
+        # uuid
+        # path
+
+
+### Vues ###
+
+    ## Objet Requete ##
+
+        # HttpRequest -> Parametre request attribue par l'URLConf
+
+        UNE VUE (lire CONTROLEUR) PREND UNE REQUETE COMMME PREMIER PARAMETRE
+
+    ## Objet Reponse ##
+
+        # HttpResponse 
+        
+        # JsonResponse
+
+        # FileResponse
+
+        # StreamingHttpResponse
+
+    ## Idees d'exercices ##
+
+    Faire le clone du HTML d'un site avec la librairie request (ou urllib)
+    Faire une page API renvoyant les films du modele film au format Json
+    Faire une API renvoyant un film (id specifiee dans l'url) du modele film
+    Faire une API qui prend une annee en parametre et return les films sortis cette annee (prevoir l'exception si aucun film)
+    Faire une API qui return l'un des fichiers CSV utilise
+    Creer une page qui stream un integer random toute les secondes
+
+    ## Pour plus de pratique ##
+
+    Faire des choses similaires avec les autres datasets
+
+
+
+        
+    
+

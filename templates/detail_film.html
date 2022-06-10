@@ -1,0 +1,39 @@
+{% extends 'films.html' %}
+
+{% block title %} <title>{{film.original_title}}</title>{% endblock %}
+
+{% block content %} 
+    <br>
+    <h3><a href="{% url 'films'%}">Back to film list</a></h3>
+    <br>
+    <h1>{{film.original_title}}</h1>
+    
+    <img src="https://corgipsum.com/400" alt="">
+    <h5>{{film.genre}}</h5>
+    <h5>{{film.director}}</h5>
+    <h5>{{film.production_company}}</h5>
+    <p>{{film.description}}</p>
+    <span>Note: {{film.avg_vote}}</span>
+
+    {% if comments%}
+    <h2>Comments:</h2>
+        {% for comment in comments %}
+            <p>{{comment}}</p>
+        {% endfor %}
+        <h3>Add a comment: </h3>
+        <form action="" method="POST", enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit">
+        </form>
+    {%else%}
+    <h2>Comments:</h2>
+        <p>The are no comments...</p>
+        <h3>Add a comment: </h3>
+        <form action="" method="POST", enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit">
+        </form>
+        {% endif %}
+{% endblock%}

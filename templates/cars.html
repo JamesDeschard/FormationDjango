@@ -1,0 +1,21 @@
+{% for car in cars%}
+
+<h2>List of Cars</h2>
+
+<h2>{{car.name}}</h2>
+<h2>{{car.price}}</h2>
+{% if car.photo%}
+<img src="{{ car.photo.url }}" alt="">
+{% endif %}
+{% if car.specs%}
+<a href="{{ car.specs.url }}" download>Telecharger les specs</a>
+{% endif %}
+
+<h2>Create a Car</h2>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create car">
+</form>
+
+{% endfor %}

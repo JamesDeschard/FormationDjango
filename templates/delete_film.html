@@ -1,0 +1,14 @@
+
+{% extends 'films.html' %}
+{% block title %}<title>Delete</title>{% endblock %}
+
+{% block content%}
+<h1>Delete {{film}}</h1>
+<br>
+<h3><a href="{% url 'films'%}">Back to film list</a></h3>
+<br>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="submit" value="Delete Movie">
+</form>
+{% endblock%}

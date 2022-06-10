@@ -1,0 +1,161 @@
+### Les templates ###
+
+    ## Les variables ##
+
+        {{ var }}
+
+        forloop.counter --> Index element dans boucle for en partant de 1
+        forloop.counter0 --> Index element dans boucle for en partant de 0
+
+        forloop.revcounter --> Nombre d'iterations restantes (index 1)
+        forloop.revcounter0 --> Nombre d'iterations restantes (index 0)
+
+        forloop.first --> True is element est index[0]
+        forloop.last --> True is element est index[1]
+
+    
+    ## Les balises ##
+
+        {% <balise> %}
+
+        {% extends "base.html "%}
+        {% block content %} ... {% endblock %} 
+        {% include "foo/bar.html" %}
+
+        {% for i in ... %}
+        {% endfor %}
+
+        {% empty %}
+        {% cycle 'loop % 2 == 0' 'loop % 2 !=0' %}
+
+        {% if ... %}
+        {% elif ... %}
+        {% endif %}
+
+        {% url '<url name>' param %}
+        {% csrf_token %}
+
+    ## Les filtres ##
+
+        {{ var | filtre }}
+
+        upper 
+        title
+        length
+        join:", " # : indique params
+        pluralize:"ie,ies"
+        date:"Y-m-d"
+    
+    ## Les commentaires ##
+
+        {% comment %} ... {% endcomment %}
+
+
+### Les formulaires ###
+
+    ## forms.Form ##
+
+        class NameForm(forms.Form):
+            your_name = forms.CharField(label='Your name', max_length=100)
+    
+    ## forms.ModelForm ##
+
+        class CreateBookForm(forms.ModelForm):
+        class Meta:
+            model = VotreModel
+            fields = [les champs souhaites]
+
+
+    la methode is_valid(): 
+            - renvoie True si le formulaire est remplie
+            - insère les données du formulaire dans l’attribut cleaned_data (type=dict).
+ 
+    Formulaire lie: ExampleForm(request.POST)
+    Formulaire non lie: ExampleForm()
+
+    Un formulaire ModelForm dispose d'une methode save() pour enregistrer le nouvel objet en BDD
+
+    ## Le formulaire en relation avec la Vue ##
+
+    {{ form.as_table }} affiche les composants sous forme de cellules de tableau à l’intérieur de balises <tr>
+    {{ form.as_p }} affiche les composants dans des balises <p>
+    {{ form.as_ul }} affiche les composants dans des balises <li>
+
+    Notez que vous devrez ajouter vous-même les éléments <table> ou <ul> autour du contenu produit.
+
+    Chaque champ de formulaire reçoit un attribut ID défini à id_<nom-de-champ> qui est référencé par la 
+    balise label correspondante.
+
+### Authentification ###
+
+    Tout utilisateur est un objet USER issu de django.contrib.auth.models
+    Un superuser est un utilisateur dont les attributs is_staff et is_superuser == True
+
+
+    ## Creation ##
+
+        Ex: 
+
+        from django.contrib.auth.models import User
+            user = User.objects.create_user('james', 'james.desch@gmail.com', 'james1234!@')
+        
+
+        Les mdp ne sont pas visibles. Proteges par hashing. Pour changer le mdp utiliser la methode User.set_password()
+
+        Django fournie les vues et formulaires pour la modification/creation d'utilisateurs:
+
+            # Vues (a vous de creer les templates)
+
+                urlpatterns = [
+                    path('accounts/', include('django.contrib.auth.urls')),
+                ]   
+
+                accounts/login/ [name='login']
+                accounts/logout/ [name='logout']
+                accounts/password_change/ [name='password_change']
+                accounts/password_change/done/ [name='password_change_done']
+                accounts/password_reset/ [name='password_reset']
+                accounts/password_reset/done/ [name='password_reset_done']
+                accounts/reset/<uidb64>/<token>/ [name='password_reset_confirm']
+                accounts/reset/done/ [name='password_reset_complete']
+
+                Context formulaire est toujours == {{ form }}
+        
+    ## Authentification ##
+
+        from django.contrib.auth import authenticate
+            user = authenticate(username='john', password='secret')
+
+        Django utilise son systeme de sessions pour identifier l'utilisateur
+        On peut acceder a l'utilisateur avec l'attribut request.user de l'objet request
+
+        # Login 
+
+        from django.contrib.auth import login
+
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+
+        # Logout 
+
+        from django.contrib.auth import logout
+
+            def logout_view(request):
+                logout(request)
+    
+
+    ## Les restrictions ##
+
+        Methode 1: Prevoir une condition if not request.user.is_authenticated
+
+        Methode 2: Decorateur @login_required(redirect_name)
+
+        Methode 3: Mixin (si vue fondee sur une classe)
+            surcharger le param login_url
+
+
+    
+

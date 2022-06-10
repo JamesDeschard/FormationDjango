@@ -1,0 +1,15 @@
+
+{% extends 'films.html' %}
+{% block title %}<title>Create a new film</title>{% endblock %}
+
+{% block content%}
+<h1>Create a new movie</h1>
+<br>
+<h3><a href="{% url 'films'%}">Back to film list</a></h3>
+<br>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+</form>
+{% endblock%}
